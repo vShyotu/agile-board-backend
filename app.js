@@ -3,7 +3,7 @@ const Router = require("@koa/router");
 const app = new Koa();
 const router = new Router();
 const port = process.env.APP_PORT || 3000;
-const env = process.env.NODE_ENV || "";
+const env = process.env.NODE_ENV;
 
 router.get("/heartbeat", async (ctx, next) => {
   ctx.status = 200;
@@ -14,5 +14,7 @@ router.get("/heartbeat", async (ctx, next) => {
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-app.listen(port);
+const server = app.listen(port);
 console.log(`App listening on port ${port} in ${env}mode`);
+
+module.exports = server;

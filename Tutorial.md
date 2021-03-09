@@ -3,12 +3,13 @@
 ## Install and setup Koa
 
 1. `npm init --yes`
+   Change package.json to use app.js as the main entry point
 2. `npm install koa`
 
-3. Setup basic hello world
+3. Create app.js and setup basic hello world
 
    ```js
-   // index.js
+   // app.js
 
    const Koa = require("koa");
    const app = new Koa();
@@ -26,7 +27,7 @@
 4. Setup package.json to have a start command
 
    ```json
-   "start:dev": "SET NODE_ENV=development & node index.js",
+   "start:dev": "SET NODE_ENV=development & node app.js",
    ```
 
 5. Try and see if it works.
@@ -60,7 +61,7 @@
    - Change the extends array to be koa rather than standard
 
    ```js
-   extends: ["koa", "prettier"],
+   extends: ["eslint:recommended", "koa"],
    ```
 
 ### Prettier - Code formatting
@@ -86,6 +87,10 @@
    - `npm install --save-dev eslint-config-prettier`
    - Add "prettier" to the extends array in .eslintrc.js
 
+   ```js
+   extends: ["eslint:recommended", "koa", "prettier"],
+   ```
+
 ### Setup Nodemon
 
 Currently we have to restart the application everytime we make changes - nodemon will take care of this for us and watch for changes and restart as necessary.
@@ -100,9 +105,11 @@ Change npm script for starting development to use nodemon
 
 `nodemon` uses the package.json's entry point by default, but you can specify it as an additional parameter if necessary.
 
-Run `npm run start:dev` and change index.js to:
+Run `npm run start:dev` and change app.js to:
 
 ```js
+// app.js
+
 const Koa = require("koa");
 const app = new Koa();
 const port = process.env.APP_PORT || 3000;
@@ -142,7 +149,7 @@ git branch -M main
 git push -u origin main
 ```
 
-### Setup Husky
+## Setup Husky
 
 Setup Husky pre-commit hooks with lint-staged to run linting and formatting on commits
 
@@ -157,10 +164,10 @@ Setup Husky pre-commit hooks with lint-staged to run linting and formatting on c
 
 What is it? A router middleware for Koa. Unlike Express Koa does not come with routing out of the box.
 
-### Setup heartbeat route
+## Setup heartbeat route
 
 ```js
-// index.js
+// app.js
 
 const Koa = require("koa");
 const Router = require("@koa/router");
@@ -183,3 +190,82 @@ console.log(`App listening on port ${port} in ${env}mode`);
 ```
 
 ## Setup Testing (Jest, Supertest)
+
+### Install jest and supertest
+
+`npm install --save-dev jest supertest`
+
+### Configure jest
+
+Run the following command to initialise a jest.config.js:
+`npx jest --init`
+
+Select the following options:
+
+- No
+- Node
+- Yes
+- v8
+- Yes
+
+For more information about the reporters available see this page: https://istanbul.js.org/docs/advanced/alternative-reporters/
+
+Adjust config as required for your project, here's what I'm using:
+
+```js
+// jest.config.js
+
+module.exports = {
+  clearMocks: true,
+  coverageDirectory: "coverage",
+  coverageProvider: "babel",
+  // text is used to generate console output for coverage, lcov generates html and lcov format report.
+  coverageReporters: ["text", "lcov"],
+  coverageThreshold: {
+    global: {
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80,
+    },
+  },
+  moduleDirectories: ["node_modules"],
+  moduleFileExtensions: ["js", "node"],
+  testEnvironment: "node",
+  testMatch: ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[tj]s?(x)"],
+  testPathIgnorePatterns: ["\\\\node_modules\\\\"],
+  transformIgnorePatterns: ["\\\\node_modules\\\\"],
+};
+```
+
+### Setup jest/eslint compatibility
+
+`npm install --save-dev eslint-plugin-jest`
+
+- Add `"plugin:jest/recommended"` to the plugins in .eslintrc.js
+
+  ```js
+  extends: ["eslint:recommended", "plugin:jest/recommended", "koa", "prettier"],
+  ```
+
+### Setup package.json for testing
+
+- Change package.json's `"test": "jest"`
+- Add package.json script `"test:coverage": "jest --coverage"`
+
+### Write tests for app.js
+
+### Run tests
+
+`npm run test:coverage`
+
+### Add Coverage to .gitignore
+
+Add `coverage` to .gitignore - we don't want to commit test coverage files.
+
+### Ignore coverage folder in jest config
+
+```js
+  testPathIgnorePatterns: ["\\\\node_modules\\\\", "\\\\coverage\\\\"],
+  transformIgnorePatterns: ["\\\\node_modules\\\\", "\\\\coverage\\\\"],
+```

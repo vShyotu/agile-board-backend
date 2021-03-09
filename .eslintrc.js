@@ -3,8 +3,9 @@ module.exports = {
     commonjs: true,
     es2021: true,
     node: true,
+    jest: true,
   },
-  extends: ["koa", "prettier"],
+  extends: ["eslint:recommended", "plugin:jest/recommended", "koa", "prettier"],
   parserOptions: {
     ecmaVersion: 12,
   },
