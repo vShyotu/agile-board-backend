@@ -35,11 +35,7 @@
 
 ### ESLint - Koa Config
 
-1. Install eslint -
-
-   ```
-   npm install --save-dev eslint-config-koa eslint-config-standard eslint-plugin-standard eslint-plugin-promise eslint-plugin-import eslint-plugin-node
-   ```
+1. Install eslint - `npm install eslint --save-dev`
 
 2. Create config file - `npx eslint --init`
 
@@ -54,7 +50,16 @@
      - JavaScript
 
 3. Use eslint-config-koa
+
+   ```
+   npm install --save-dev eslint-config-koa eslint-config-standard eslint-plugin-standard eslint-plugin-promise eslint-plugin-import eslint-plugin-node
+   ```
+
    - Change the extends array to be koa rather than standard
+
+   ```js
+   extends: ["koa", "prettier"],
+   ```
 
 ### Prettier - Code formatting
 
