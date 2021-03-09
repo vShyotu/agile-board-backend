@@ -31,7 +31,7 @@
 
    `npm run start:dev`
 
-## Setup Tooling (ESLint, Prettier, Husky, Nodemon)
+## Setup Tooling (ESLint, Prettier, Nodemon)
 
 ### ESLint - Koa Config
 
@@ -79,13 +79,6 @@
    - `npm install --save-dev eslint-config-prettier`
    - Add "prettier" to the extends array in .eslintrc.js
 
-4. Setup Husky pre-commit hooks with lint-staged to run linting and formatting on commits
-
-   - `npx mrm lint-staged`
-   - Remove any log file artefacts created by this command (e.g. 10)
-
-     **Note:** it's important that eslint and prettier are configured prior to this as it will detect them in your package.json file to setup lint-staged and husky and create their configs in package.json.
-
 ### Setup Nodemon
 
 Currently we have to restart the application everytime we make changes - nodemon will take care of this for us and watch for changes and restart as necessary.
@@ -127,11 +120,23 @@ If setup you should see "App listening on port 3000" displayed and then "App lis
 1. `git init`
 1. `git add .`
 1. `git commit -m "Initial commit"`
-1. Add Readme.md with description of the project
-1. `git add Readme.md`
-1. `git commit -m "Add Readme.md`
+1. Add README.md with description of the project
+1. `git add README.md`
+1. `git commit -m "Add README.md`
+
+## Create GitHub Repo
+
 1. Login to GitHub and create a repository.
 1. Follow the instructions provided by github to push an existing repo.
+
+### Setup Husky
+
+Setup Husky pre-commit hooks with lint-staged to run linting and formatting on commits
+
+- `npx mrm lint-staged`
+- Remove any log file artefacts created by this command (e.g. 10)
+
+  **Note:** it's important that eslint and prettier are configured prior to this as it will detect them in your package.json file to setup lint-staged and husky and create their configs in package.json.
 
 ## Setup Koa Router
 
