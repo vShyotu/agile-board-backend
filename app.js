@@ -5,6 +5,7 @@ const router = new Router();
 const port = process.env.APP_PORT || 3000;
 const env = process.env.NODE_ENV;
 
+// Temporary heartbeat route
 router.get("/heartbeat", async (ctx, next) => {
   ctx.status = 200;
   ctx.body = { serviceName: "agile-board-backend", status: ctx.status };

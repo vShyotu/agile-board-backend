@@ -269,3 +269,20 @@ Add `coverage` to .gitignore - we don't want to commit test coverage files.
   testPathIgnorePatterns: ["\\\\node_modules\\\\", "\\\\coverage\\\\"],
   transformIgnorePatterns: ["\\\\node_modules\\\\", "\\\\coverage\\\\"],
 ```
+
+### Update pre-commit hooks to include running the tests
+
+```js
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "jest --findRelatedTests --bail"
+    ],
+    "*.{js,md}": "prettier --write"
+  }
+```
