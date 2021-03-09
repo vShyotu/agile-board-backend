@@ -8,6 +8,8 @@
 3. Setup basic hello world
 
    ```js
+   // index.js
+
    const Koa = require("koa");
    const app = new Koa();
    const port = process.env.APP_PORT || 3000;
@@ -150,5 +152,34 @@ Setup Husky pre-commit hooks with lint-staged to run linting and formatting on c
   **Note:** it's important that eslint and prettier are configured prior to this as it will detect them in your package.json file to setup lint-staged and husky and create their configs in package.json.
 
 ## Setup Koa Router
+
+`npm install @koa/router`
+
+What is it? A router middleware for Koa. Unlike Express Koa does not come with routing out of the box.
+
+### Setup heartbeat route
+
+```js
+// index.js
+
+const Koa = require("koa");
+const Router = require("@koa/router");
+const app = new Koa();
+const router = new Router();
+const port = process.env.APP_PORT || 3000;
+const env = process.env.NODE_ENV || "";
+
+router.get("/heartbeat", async (ctx, next) => {
+  ctx.status = 200;
+  ctx.body = { serviceName: "agile-board-backend", status: ctx.status };
+  await next();
+});
+
+app.use(router.routes());
+app.use(router.allowedMethods());
+
+app.listen(port);
+console.log(`App listening on port ${port} in ${env}mode`);
+```
 
 ## Setup Testing (Jest, Supertest)
