@@ -129,6 +129,12 @@ If setup you should see "App listening on port 3000" displayed and then "App lis
 1. Login to GitHub and create a repository.
 1. Follow the instructions provided by github to push an existing repo.
 
+```
+git remote add origin git@github.com:<username>/<repo>.git
+git branch -M main
+git push -u origin main
+```
+
 ### Setup Husky
 
 Setup Husky pre-commit hooks with lint-staged to run linting and formatting on commits
