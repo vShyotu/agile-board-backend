@@ -1,5 +1,6 @@
 const Koa = require("koa");
 const Router = require("@koa/router");
+const bodyParser = require("koa-bodyparser");
 const app = new Koa();
 const router = new Router();
 const port = process.env.APP_PORT || 3000;
@@ -14,6 +15,7 @@ router.get("/heartbeat", async (ctx, next) => {
   await next();
 });
 
+app.use(bodyParser());
 app.use(router.routes());
 app.use(ticketRoutes.routes());
 app.use(router.allowedMethods());

@@ -39,7 +39,7 @@ describe("Tickets routes", () => {
 
       expect(response.status).toBe(200);
       expect(response.type).toBe("application/json");
-      expect(response.body.data).toStrictEqual({
+      expect(response.body.data).toMatchObject({
         id: 1,
         title: "First Story",
         type: "Story",
@@ -51,6 +51,23 @@ describe("Tickets routes", () => {
       const response = await request(server).get("/api/v1/tickets/999999999");
 
       expect(response.status).toBe(404);
+      expect(response.body.errors.length).toBe(1);
+    });
+  });
+
+  describe("POST /api/v1/tickets", () => {
+    it("should return the ticket that was created", async () => {
+      const data = {
+        title: "New Story",
+        type: "Story",
+        description: "A new story",
+      };
+      const response = await request(server).post("/api/v1/tickets").send(data);
+
+      expect(response.status).toBe(201);
+      expect(response.type).toBe("application/json");
+      expect(response.body.data).toMatchObject(data);
+      expect(response.body.data).toHaveProperty("id");
     });
   });
 });
