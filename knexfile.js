@@ -22,13 +22,12 @@ module.exports = {
       directory: path.join(BASE_PATH, "seeds"),
     },
   },
-
   development: {
-    client: "postgresql",
+    client: "pg",
     connection: {
       database: "agile_board",
-      user: "username",
-      password: "password",
+      user: "postgres",
+      password: "docker",
     },
     pool: {
       min: 2,

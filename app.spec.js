@@ -1,11 +1,17 @@
 const request = require("supertest");
-const server = require("./app");
-
-afterAll(() => {
-  server.close();
-});
+const app = require("./app");
 
 describe("App", () => {
+  let server;
+
+  beforeAll(() => {
+    server = app.listen();
+  });
+
+  afterAll(() => {
+    server.close();
+  });
+
   describe("/heartbeat route", () => {
     it("should respond with status 200", async () => {
       const response = await request(server)

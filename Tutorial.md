@@ -296,7 +296,7 @@ Install docker.
 Run the following command to pull down Postgres and run it:
 
 ```
-docker run --rm --name agile-board-postgres -e POSTGRES_PASSWORD=docker -d -p 5432:5432 -v /docker/volumes/postgres:/var/lib/postgresql/data postgres
+docker run --rm --name agile-board-postgres -e POSTGRES_PASSWORD=docker -d -p 5432:5432 -v D:/docker/volumes/postgres:/var/lib/postgresql/data postgres
 ```
 
 - `--name agile-board-postgres` sets the container name
@@ -374,3 +374,46 @@ module.exports = {
   },
 };
 ```
+
+Create migration to add a tickets table
+`knex migrate:make tickets_table`
+-> edit in /db/migrations/timestamp_tickets_table.js
+
+Create schema for the table
+
+Save and run the migration
+`knex migrate:latest`
+
+Create a seed file
+`knex seed:make tickets_seed`
+-> edit in /seeds/tickets_seed.js
+
+Save and run the seeds
+`knex seed:run`
+
+Exec into the container, login to psql and then
+`\l` to list the databases
+`\c` to change the database - use `\c agile_board`
+`\dt` to list tables in the database - check tickets now exists
+`select * from tickets` - check the seed ran correctly
+
+## Create connection.js file
+
+## Create queries folder
+
+Create tickets.js query file - import knex and use the connection.js file
+
+## Create routes folder
+
+Create tickets.js routes file - import tickets knex from tickets.js in queries,
+
+- Add router to app.js
+- Add test file (ticket.spec.js)
+
+## Create GET all tickets route by TDD
+
+## Create GET single ticket route by TDD
+
+## Install koa body parser
+
+## Setup POST new ticket route by TDD

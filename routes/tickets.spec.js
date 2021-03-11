@@ -1,0 +1,56 @@
+const knex = require("../db/connection");
+const request = require("supertest");
+const app = require("../app");
+
+describe("Tickets routes", () => {
+  let server;
+
+  beforeAll(async () => {
+    await knex.migrate.rollback();
+    await knex.migrate.latest();
+    await knex.seed.run();
+    server = app.listen();
+  });
+
+  afterAll(async () => {
+    await knex.destroy();
+    server.close();
+  });
+
+  describe("GET /api/v1/tickets", () => {
+    it("should return all tickets", async () => {
+      const response = await request(server).get("/api/v1/tickets");
+
+      expect(response.status).toBe(200);
+      expect(response.type).toBe("application/json");
+
+      response.body.data.forEach((ticket) => {
+        expect(ticket).toHaveProperty("id");
+        expect(ticket).toHaveProperty("title");
+        expect(ticket).toHaveProperty("type");
+        expect(ticket).toHaveProperty("description");
+      });
+    });
+  });
+
+  describe("GET /api/v1/tickets/:id", () => {
+    it("should return a ticket with the given id", async () => {
+      const response = await request(server).get("/api/v1/tickets/1");
+
+      expect(response.status).toBe(200);
+      expect(response.type).toBe("application/json");
+      expect(response.body.data).toStrictEqual({
+        id: 1,
+        title: "First Story",
+        type: "Story",
+        description: "My first story",
+      });
+    });
+
+    it("should return a 404 error if the ticket with given id doesn't exist", async () => {
+      const response = await request(server).get("/api/v1/tickets/999999999");
+
+      expect(response.status).toBe(404);
+    });
+  });
+});
