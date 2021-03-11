@@ -47,7 +47,7 @@ describe("Tickets routes", () => {
       });
     });
 
-    it("should return a 404 error if the ticket with given id doesn't exist", async () => {
+    it("should return an error 404 if the ticket with the given id doesn't exist", async () => {
       const response = await request(server).get("/api/v1/tickets/999999999");
 
       expect(response.status).toBe(404);
@@ -68,6 +68,18 @@ describe("Tickets routes", () => {
       expect(response.type).toBe("application/json");
       expect(response.body.data).toMatchObject(data);
       expect(response.body.data).toHaveProperty("id");
+    });
+
+    it("should return an error 400 if the payload is invalid", async () => {
+      const data = {
+        title: "New Story",
+      };
+
+      const response = await request(server).post("/api/v1/tickets").send(data);
+
+      expect(response.status).toBe(400);
+      expect(response.type).toBe("application/json");
+      expect(response.body.errors.length).toBe(1);
     });
   });
 });

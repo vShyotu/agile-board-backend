@@ -56,8 +56,6 @@ router.post(BASE_URL, async (ctx, _) => {
     ctx.body = {
       errors: ["Something went wrong whilst trying to create the ticket"],
     };
-
-    console.log(err);
   }
 });
 
