@@ -84,4 +84,28 @@ router.put(`${BASE_URL}/:id`, async (ctx, _) => {
   }
 });
 
+router.delete(`${BASE_URL}/:id`, async (ctx, _) => {
+  try {
+    const id = parseInt(ctx.params.id);
+    const tickets = await queries.deleteTicket(id);
+
+    if (tickets.length > 0) {
+      ctx.status = 200;
+      ctx.body = {
+        data: tickets[0],
+      };
+    } else {
+      ctx.status = 404;
+      ctx.body = {
+        errors: ["Could not find a ticket with that ID"],
+      };
+    }
+  } catch (err) {
+    ctx.status = 400;
+    ctx.body = {
+      errors: ["Something went wrong whilst trying to delete the ticket"],
+    };
+  }
+});
+
 module.exports = router;
