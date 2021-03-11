@@ -286,3 +286,91 @@ Add `coverage` to .gitignore - we don't want to commit test coverage files.
     "*.{js,md}": "prettier --write"
   }
 ```
+
+## Database Setup (Postgres)
+
+We're going to run Postgres locally in a docker container - so we don't have to go through the process of installing it.
+
+Install docker.
+
+Run the following command to pull down Postgres and run it:
+
+```
+docker run --rm --name agile-board-postgres -e POSTGRES_PASSWORD=docker -d -p 5432:5432 -v /docker/volumes/postgres:/var/lib/postgresql/data postgres
+```
+
+- `--name agile-board-postgres` sets the container name
+- `-v /docker/volumes/postgres:/var/lib/postgresql/data` mounts the postgres volume from the container to /docker/volumes/postgres
+- `--rm` removes the container when its stopped
+- `-e POSTGRES_PASSWORD=docker` sets up the environment variable (POSTGRES_USER and POSTGRES_DB also available)
+- `-d` detached mode
+- `-p 5432:5432` exposes the port and maps it to the port inside the container - postgres runs on 5432 by default
+
+If you exec into the container you can access postgres with the following command:
+
+`psql -U postgres`
+
+Setup some databases by running:
+
+`create database agile_board;`
+`create database agile_board_test;`
+
+We'll use one for development and one specifically for testing
+
+## Install dependencies for working with Postgres
+
+`npm install pg knex` - pg is node-postgres a node wrapper for interacting with a postgres database and knex is a query builder for SQL databases - compatible with PostgreSQL
+
+Either install knex globally with npm `npm i -g knex` to use the CLI or prefix all knex cli commands with `npx`
+
+`knex init`
+
+Edit the knexfile.js to be the following:
+
+```js
+const path = require("path");
+
+const BASE_PATH = path.join(__dirname, "db");
+
+module.exports = {
+  test: {
+    client: "pg",
+    connection: {
+      database: "agile_board_test",
+      user: "postgres",
+      password: "docker",
+    },
+    pool: {
+      min: 2,
+      max: 10,
+    },
+    migrations: {
+      tableName: "knex_migrations",
+      directory: path.join(BASE_PATH, "migrations"),
+    },
+    seeds: {
+      directory: path.join(BASE_PATH, "seeds"),
+    },
+  },
+
+  development: {
+    client: "postgresql",
+    connection: {
+      database: "agile_board",
+      user: "username",
+      password: "password",
+    },
+    pool: {
+      min: 2,
+      max: 10,
+    },
+    migrations: {
+      tableName: "knex_migrations",
+      directory: path.join(BASE_PATH, "migrations"),
+    },
+    seeds: {
+      directory: path.join(BASE_PATH, "seeds"),
+    },
+  },
+};
+```
