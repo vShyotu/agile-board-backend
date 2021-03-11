@@ -1,13 +1,11 @@
 exports.up = function (knex) {
   return knex.schema.table("tickets", (table) => {
-    table.timestamp("created_at").defaultTo(knex.fn.now());
-    table.timestamp("updated_at").defaultTo(knex.fn.now());
+    table.timestamps(true, true);
   });
 };
 
 exports.down = function (knex) {
   return knex.schema.table("tickets", (table) => {
-    table.dropColumn("created_at");
-    table.dropColumn("updated_at");
+    table.dropTimestamps();
   });
 };

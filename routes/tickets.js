@@ -38,12 +38,12 @@ router.get(`${BASE_URL}/:id`, async (ctx, _) => {
 
 router.post(BASE_URL, async (ctx, _) => {
   try {
-    const ticket = await queries.addTicket(ctx.request.body);
+    const tickets = await queries.addTicket(ctx.request.body);
 
-    if (ticket.length > 0) {
+    if (tickets.length > 0) {
       ctx.status = 201;
       ctx.body = {
-        data: ticket[0],
+        data: tickets[0],
       };
     } else {
       ctx.status = 400;
@@ -55,6 +55,31 @@ router.post(BASE_URL, async (ctx, _) => {
     ctx.status = 400;
     ctx.body = {
       errors: ["Something went wrong whilst trying to create the ticket"],
+    };
+  }
+});
+
+router.put(`${BASE_URL}/:id`, async (ctx, _) => {
+  try {
+    const id = parseInt(ctx.params.id);
+    const tickets = await queries.updateTicket(id, ctx.request.body);
+
+    if (tickets.length > 0) {
+      ctx.status = 200;
+      ctx.body = {
+        data: tickets[0],
+      };
+    } else {
+      ctx.status = 404;
+      ctx.body = {
+        errors: ["Could not find a ticket with that ID"],
+      };
+    }
+  } catch (err) {
+    console.log(err);
+    ctx.status = 400;
+    ctx.body = {
+      errors: ["Something went wrong whilst trying to update the ticket"],
     };
   }
 });

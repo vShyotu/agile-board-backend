@@ -62,6 +62,7 @@ describe("Tickets routes", () => {
         type: "Story",
         description: "A new story",
       };
+
       const response = await request(server).post("/api/v1/tickets").send(data);
 
       expect(response.status).toBe(201);
@@ -78,6 +79,41 @@ describe("Tickets routes", () => {
       const response = await request(server).post("/api/v1/tickets").send(data);
 
       expect(response.status).toBe(400);
+      expect(response.type).toBe("application/json");
+      expect(response.body.errors.length).toBe(1);
+    });
+  });
+
+  describe("PUT /api/v1/tickets/:id", () => {
+    it("should return the ticket that was updated", async () => {
+      const data = {
+        title: "Updated Story",
+        type: "Story",
+        description: "An updated story",
+      };
+
+      const response = await request(server)
+        .put("/api/v1/tickets/2")
+        .send(data);
+
+      expect(response.status).toBe(200);
+      expect(response.type).toBe("application/json");
+      expect(response.body.data).toMatchObject(data);
+      expect(response.body.data).toHaveProperty("id", 2);
+    });
+
+    it("should throw an error 404 if the ticket doesn't exist", async () => {
+      const data = {
+        title: "Updated Story",
+        type: "Story",
+        description: "An updated story",
+      };
+
+      const response = await request(server)
+        .put("/api/v1/tickets/999999999")
+        .send(data);
+
+      expect(response.status).toBe(404);
       expect(response.type).toBe("application/json");
       expect(response.body.errors.length).toBe(1);
     });
